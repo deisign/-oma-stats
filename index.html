@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coma Stats | Статистика радио</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="stats-container">
+        <h1>📊 Статистика Coma.fm</h1>
+
+        <!-- Фильтр периодов -->
+        <div class="filter-buttons">
+            <button onclick="updateStats('24h')">⏳ 24 часа</button>
+            <button onclick="updateStats('week')">📆 Неделя</button>
+            <button onclick="updateStats('month')">📅 Месяц</button>
+        </div>
+
+        <!-- Круговая диаграмма жанров -->
+        <h2>🎵 Жанры</h2>
+        <canvas id="genreChart"></canvas>
+
+        <!-- Бар-график популярных артистов -->
+        <h2>🎸 Топ-артисты</h2>
+        <canvas id="artistChart"></canvas>
+
+        <!-- ТОП-10 треков -->
+        <h2>🏆 ТОП-10 треков</h2>
+        <ul id="topTracks"></ul>
+    </div>
+</body>
+</html>
