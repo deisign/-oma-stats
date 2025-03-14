@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const API_URL = "https://public.radio.co/stations/s4360dbc20/history";
     let genreChart, artistChart;
 
-    // Функция для получения данных из API
+    // Функция получения данных
     async function fetchStats() {
         try {
             const response = await fetch(API_URL);
@@ -15,7 +15,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Функция для обработки данных
+    // Фильтр по периоду (24ч / неделя / месяц)
+    function filterTracks(tracks, period) {
+        let now = new Date();
+        let cutoffDate = new Date();
+
+        if (period === "week") cutoffDate.setDate(now.getDate() - 7);
+        if (period === "month") cutoffDate.setMonth(now.getMonth() - 1);
+
+        return tracks.filter(track => {
+            let trackDate = new Date(track.start_time);
+            return trackDate >= cutoffDate;
+        });
+    }
+
+    // Обработка статистики
     function processStats(tracks) {
         let genreCounts = {};
         let artistCounts = {};
@@ -23,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tracks.forEach(track => {
             let [artist, title] = track.title.split(" - ", 2);
-
             if (artist) artistCounts[artist] = (artistCounts[artist] || 0) + 1;
             if (title) trackCounts[title] = (trackCounts[title] || 0) + 1;
 
@@ -38,14 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    // Функция обновления графиков
+    // Функция обновления статистики
     async function updateStats(period = "24h") {
         console.log(`Обновляем статистику за: ${period}`);
 
         let tracks = await fetchStats();
         if (!tracks.length) return;
 
-        let { topGenres, topArtists, topTracks } = processStats(tracks);
+        let filteredTracks = filterTracks(tracks, period);
+        let { topGenres, topArtists, topTracks } = processStats(filteredTracks);
 
         // Обновляем круговую диаграмму жанров
         let genreCtx = document.getElementById("genreChart").getContext("2d");
